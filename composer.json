@@ -1,0 +1,16 @@
+{
+    "name": "build_spec_generator",
+    "type": "drupal-module",
+    "description": "Build Spec Generator module. Generates list of content types and other entities in markdown format.",
+    "keywords": [
+    ],
+    "homepage": "https://www.drupal.org/project/build_spec_generator",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/build_spec_generator",
+        "source": "http://cgit.drupalcode.org/build_spec_generator"
+    },
+    "require": {
+        "league/html-to-markdown": "^4.10"
+    }
+}

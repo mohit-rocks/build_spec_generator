@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains build_spec_generator.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function build_spec_generator_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the build_spec_generator module.
+    case 'help.page.build_spec_generator':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Build Spec Generator module. Generates list of content types and other entities in markdown format.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

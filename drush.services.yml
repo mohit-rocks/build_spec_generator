@@ -1,0 +1,5 @@
+services:
+  build_spec_generator.commands:
+    class: Drupal\build_spec_generator\Commands\BuildSpecGeneratorCommands
+    tags:
+      - { name: drush.command }
