@@ -45,11 +45,5 @@ class BuildSpecGeneratorCommands extends DrushCommands {
   public function generateBuildSpec() {
     // Perform export operation.
     $this->fileStorageService->export();
-
-    $converter = new HtmlConverter();
-
-    $html = "<em>article</em>";
-    $markdown = $converter->convert($html);
-    print $markdown;
   }
 }
