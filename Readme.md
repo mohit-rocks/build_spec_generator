@@ -1,7 +1,7 @@
-#Build Spec Generator
+# Build Spec Generator
 This module generates build spec related configurations to md file. This is experimental module so it might break depending on module setup.
 
-##Installation
+## Installation
 
 ## Setup
 Add following snippet in settings.php
