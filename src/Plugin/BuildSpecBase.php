@@ -16,4 +16,11 @@ abstract class BuildSpecBase extends PluginBase implements BuildSpecInterface {
     return $this->pluginDefinition['label'];
   }
 
+  /**
+   * All the plugins should implement this function and return markup string.
+   *
+   * @return string
+   */
+  abstract public function prepareContent();
+
 }

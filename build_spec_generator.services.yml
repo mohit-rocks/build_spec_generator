@@ -8,3 +8,6 @@ services:
   build_spec_generator.generator:
     class: Drupal\build_spec_generator\BuildSpecGenerator
     arguments: ['@plugin.manager.build_spec']
+  build_spec_generator.file_storage:
+    class: Drupal\build_spec_generator\FileStorageService
+    arguments: ['@build_spec_generator.generator', '@file_system']
