@@ -11,6 +11,7 @@
         "source": "http://cgit.drupalcode.org/build_spec_generator"
     },
     "require": {
-        "league/html-to-markdown": "^4.10"
+        "league/html-to-markdown": "^4.10",
+        "maddhatter/markdown-table": "^1.0"
     }
 }

@@ -3,6 +3,7 @@
 namespace Drupal\build_spec_generator\Plugin\BuildSpec;
 
 use Drupal\build_spec_generator\Annotation\BuildSpec;
+use Drupal\build_spec_generator\MarkDownBuilderService;
 use Drupal\build_spec_generator\Plugin\BuildSpecBase;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\content_translation\ContentTranslationManagerInterface;
@@ -10,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use MaddHatter\MarkdownTable\Builder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,20 +19,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @BuildSpec(
  *   id = "node_types",
- *   description = @Translation("Export configurations related to node types."),
+ *   description = @Translation("Export build specification related to node types."),
  *   label = "NodeTypes",
  *   keys = {
- *     "name",
- *     "type",
- *     "description",
- *     "help",
- *     "content_moderation",
- *     "layout_builder",
- *     "translatable",
- *     "comments",
- *     "meta_tags",
- *     "pathauto",
- *     "searchable",
+ *     "Name",
+ *     "Type",
+ *     "Description",
+ *     "Help",
+ *     "Content Moderation",
+ *     "Translatable",
+ *     "Comments",
+ *     "Meta Tags",
+ *     "Pathauto",
+ *     "Searchable",
+ *     "Layout Builder",
  *   }
  * )
  */
@@ -67,6 +69,13 @@ class NodeTypes extends BuildSpecBase implements ContainerFactoryPluginInterface
   protected $contentTranslationManager;
 
   /**
+   * Table builder object.
+   *
+   * @var \MaddHatter\MarkdownTable\Builder
+   */
+  protected $tableBuilder;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration,$plugin_id, $plugin_definition, RendererInterface $renderer, EntityTypeManagerInterface  $entityTypeManager, ModerationInformationInterface $moderation_information, ContentTranslationManagerInterface $content_translation_manager) {
@@ -75,6 +84,7 @@ class NodeTypes extends BuildSpecBase implements ContainerFactoryPluginInterface
     $this->entityTypeManager = $entityTypeManager;
     $this->moderationInformation = $moderation_information;
     $this->contentTranslationManager = $content_translation_manager;
+    $this->tableBuilder = new Builder();
   }
 
   /**
@@ -93,50 +103,36 @@ class NodeTypes extends BuildSpecBase implements ContainerFactoryPluginInterface
   }
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public function prepareContent():string {
     $rows = [];
-    $headers = [
-      ['data' => $this->t('Name')],
-      ['data' => $this->t('Type')],
-      ['data' => $this->t('Description')],
-      ['data' => $this->t('Help')],
-      ['data' => $this->t('Content Moderation')],
-      ['data' => $this->t('Translatable')],
-      ['data' => $this->t('Comments')],
-      ['data' => $this->t('Metatags')],
-      ['data' => $this->t('Pathauto')],
-      ['data' => $this->t('Searchable')],
-    ];
-    $node_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
+    $plugin_definitions = $this->getPluginDefinition();
 
+    $this->tableBuilder->headers($plugin_definitions['keys']);
+    $this->tableBuilder->align(['L']);
+
+    // Prepare list of all the rows.
+    $node_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
     foreach ($node_types as $node_type) {
       /** @var \Drupal\node\Entity\NodeType $node_type */
-      $row = [
-        'data' => [],
-      ];
-      $row['data'][] = $node_type->label();
-      $row['data'][] = $node_type->id();
-      $row['data'][] = $node_type->getDescription();
-      $row['data'][] = $node_type->getHelp();
-
-      $row['data'][] = $this->moderationInformation->shouldModerateEntitiesOfBundle($this->entityTypeManager->getDefinition('node'), $node_type->id()) == TRUE ? 'Y': 'N';
-      $row['data'][] = $this->contentTranslationManager->isEnabled('node', $node_type->id()) == TRUE ? 'Y': 'N';
-      $row['data'][] = 'Comment Placeholder';
-      $row['data'][] = 'Metatags Placeholder';
-      $row['data'][] = 'Pathauto Placeholder';
-      $row['data'][] = 'Searchable Placeholder';
-
+      $row = [];
+      $row[] = $node_type->label();
+      $row[] = $node_type->id();
+      $row[] = $node_type->getDescription();
+      $row[] = $node_type->getHelp();
+      $row[] = $this->moderationInformation->shouldModerateEntitiesOfBundle($this->entityTypeManager->getDefinition('node'), $node_type->id()) == TRUE ? 'Y': 'N';
+      $row[] = $this->contentTranslationManager->isEnabled('node', $node_type->id()) == TRUE ? 'Y': 'N';
+      $row[] = 'Comment';
+      $row[] = 'Metatags';
+      $row[] = 'Pathauto';
+      $row[] = 'Searchable';
+      $row[] = 'Layout';
+      // Move entire row to separate array.
       $rows[] = $row;
     }
-    $nodes = [
-      '#type' => 'table',
-      '#header' => $headers,
-      '#rows' => $rows,
-      '#empty' => $this->t('No blocks available.'),
-    ];
-    return $this->renderer->renderPlain($nodes);
+    $this->tableBuilder->rows($rows);
+    return $this->tableBuilder->render();
   }
 
 }

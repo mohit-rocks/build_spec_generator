@@ -56,7 +56,6 @@ class FileStorageService {
     $this->ensureStorage();
     foreach ($config_exports as $name => $export) {
       $target = $this->getFilePath($name);
-      print $target;
       $status = @file_put_contents($target, $export);
       if ($status === FALSE) {
         throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));

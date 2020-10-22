@@ -47,8 +47,7 @@ class BuildSpecGenerator {
     foreach ($plugins as $doc_item) {
       $instance = $this->pluginManagerBuildSpec->createInstance($doc_item['id']);
       $content = $instance->prepareContent();
-      $markdown = $this->converter->convert($content);
-      $markdowns[$doc_item['label']] = $markdown;
+      $markdowns[$doc_item['label']] = $content;
     }
     return $markdowns;
   }
