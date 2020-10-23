@@ -1,17 +1,26 @@
 <?php
 
-namespace Drupal\build_spec_generator;
+namespace Drupal\build_spec_generator\Plugin\Storage;
 
+use Drupal\build_spec_generator\BuildSpecGenerator;
+use Drupal\build_spec_generator\Plugin\StoragePluginBase;
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * File storage service class to store the markdown files in specified folder.
+ * Plugin implementation of the storage plugin.
+ *
+ * @Storage(
+ *   id = "file_storage",
+ *   label = @Translation("File Storage"),
+ *   description = @Translation("Plugin to export build spec files in project repository..")
+ * )
  */
-class FileStorageService {
-
+class FileStorage extends StoragePluginBase implements ContainerFactoryPluginInterface {
   /**
    * Drupal\build_spec_generator\BuildSpecGenerator definition.
    *
@@ -34,17 +43,26 @@ class FileStorageService {
   public $directory;
 
   /**
-   * Constructs a new FileStorageService object.
-   *
-   * @param \Drupal\build_spec_generator\BuildSpecGenerator $build_spec_generator
-   *   Buildspec generator service.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   File system service.
+   * {@inheritdoc}
    */
-  public function __construct(BuildSpecGenerator $build_spec_generator, FileSystemInterface $file_system) {
+  public function __construct(array $configuration,$plugin_id, $plugin_definition, BuildSpecGenerator $build_spec_generator, FileSystemInterface $file_system) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->buildSpecGeneratorGenerator = $build_spec_generator;
     $this->fileSystem = $file_system;
     $this->directory = Settings::get('build_spec_directory');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('build_spec_generator.generator'),
+      $container->get('file_system')
+    );
   }
 
   /**

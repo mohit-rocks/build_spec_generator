@@ -2,6 +2,9 @@ services:
   plugin.manager.build_spec:
     class: Drupal\build_spec_generator\Plugin\BuildSpecManager
     parent: default_plugin_manager
+  plugin.manager.storage:
+    class: Drupal\build_spec_generator\Plugin\StoragePluginManager
+    parent: default_plugin_manager
   logger.channel.build_spec_generator:
     parent: logger.channel_base
     arguments: ['build_spec_generator']

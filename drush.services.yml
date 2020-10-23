@@ -1,6 +1,6 @@
 services:
   build_spec_generator.commands:
     class: Drupal\build_spec_generator\Commands\BuildSpecGeneratorCommands
-    arguments: ['@build_spec_generator.file_storage']
+    arguments: ['@plugin.manager.storage']
     tags:
       - { name: drush.command }
