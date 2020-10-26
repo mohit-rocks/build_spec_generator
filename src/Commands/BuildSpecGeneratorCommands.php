@@ -6,6 +6,8 @@ use Drupal\build_spec_generator\Plugin\StoragePluginManager;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drush\Commands\DrushCommands;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -55,6 +57,21 @@ class BuildSpecGeneratorCommands extends DrushCommands {
     }
     catch (PluginNotFoundException $exception) {
       $this->output()->writeln(t('%plugin not found. Please check the name', ['plugin' => $destination]), OutputInterface::OUTPUT_NORMAL);
+    }
+  }
+
+  /**
+   * @hook interact build_spec_generator:generate_build_spec
+   */
+  public function interactSiteAliasConvert(InputInterface $input, ConsoleOutputInterface $output)
+  {
+    if (!$input->getArgument('destination')) {
+      $storage_plugins = $this->storagePluginManager->getDefinitions();
+      foreach ($storage_plugins as $storage_plugin) {
+        $options[] = $storage_plugin['id'];
+      }
+      $destination = $this->io()->choice('Select destination storage plugin:', drush_map_assoc($options));
+      $input->setArgument('destination', $destination);
     }
   }
 }
