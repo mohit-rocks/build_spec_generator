@@ -9,6 +9,7 @@ use Drupal\Core\Config\StorageException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Site\Settings;
+use MaddHatter\MarkdownTable\Builder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -70,9 +71,10 @@ class FileStorage extends StoragePluginBase implements ContainerFactoryPluginInt
    */
   public function export() {
     $config_exports = $this->buildSpecGeneratorGenerator->generate();
+    $markups = $this->generateMarkups($config_exports);
     // Ensure that directory is writable.
     $this->ensureStorage();
-    foreach ($config_exports as $name => $export) {
+    foreach ($markups as $name => $export) {
       $target = $this->getFilePath($name);
       $status = @file_put_contents($target, $export);
       if ($status === FALSE) {
@@ -112,6 +114,27 @@ class FileStorage extends StoragePluginBase implements ContainerFactoryPluginInt
       throw new StorageException('Failed to create markdown storage directory.' . $this->directory);
     }
     return $this;
+  }
+
+  /**
+   * Generate markup file from each config export.
+   *
+   * @param $config_exports
+   *   Array of config export returned from each plugin.
+   *
+   * @return array
+   *   Rendered markup for each configuration.
+   */
+  public function generateMarkups($config_exports) {
+    $markups = [];
+    foreach ($config_exports as $name => $config_export) {
+      $table_builder = new Builder();
+      $table_builder->headers($config_export['header']);
+      $table_builder->rows($config_export['rows']);
+      $table_builder->align($config_export['alignment']);
+      $markups[$name] = $table_builder->render();
+    }
+    return $markups;
   }
 
 }

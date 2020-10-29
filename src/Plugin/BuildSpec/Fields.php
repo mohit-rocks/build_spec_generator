@@ -74,11 +74,11 @@ class Fields extends BuildSpecBase implements ContainerFactoryPluginInterface {
   /**
    * {inheritdoc}
    */
-  public function prepareContent():string {
+  public function prepareContent():array {
     $plugin_definitions = $this->getPluginDefinition();
 
-    $this->tableBuilder->headers($plugin_definitions['keys']);
-    $this->tableBuilder->align(['L']);
+    $header = $plugin_definitions['keys'];
+    $alignment = ['L'];
 
     // Prepare list of all the image styles.
     $rows = [];
@@ -105,8 +105,11 @@ class Fields extends BuildSpecBase implements ContainerFactoryPluginInterface {
       $row[] = $field_config->isTranslatable() == TRUE ? 'Y' : 'N';
       $rows[] = $row;
     }
-    $this->tableBuilder->rows($rows);
-    return $this->tableBuilder->render();
+    return [
+      'header' => $header,
+      'rows' => $rows,
+      'alignment' => $alignment
+    ];
   }
 
 }

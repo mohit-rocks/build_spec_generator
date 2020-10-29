@@ -19,7 +19,7 @@ interface BuildSpecInterface extends PluginInspectionInterface {
   /**
    * Prepare the items that needs to be exported to markdown file.
    *
-   * @return mixed
+   * @return array
    */
   public function prepareContent();
 

@@ -12,6 +12,7 @@
     },
     "require": {
         "league/html-to-markdown": "^4.10",
-        "maddhatter/markdown-table": "^1.0"
+        "maddhatter/markdown-table": "^1.0",
+        "google/apiclient": "^2.0"
     }
 }

@@ -63,7 +63,7 @@ class BuildSpecGeneratorCommands extends DrushCommands {
   /**
    * @hook interact build_spec_generator:generate_build_spec
    */
-  public function interactSiteAliasConvert(InputInterface $input, ConsoleOutputInterface $output)
+  public function interactGenerateStorageOptions(InputInterface $input, ConsoleOutputInterface $output)
   {
     if (!$input->getArgument('destination')) {
       $storage_plugins = $this->storagePluginManager->getDefinitions();

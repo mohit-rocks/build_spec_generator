@@ -42,14 +42,16 @@ class BuildSpecGenerator {
    *   Array of all the configuration's markup text.
    */
   public function generate():array {
-    $markdowns = [];
+    // Attribute will contain array returned from each plugin.
+    // Typically each plugin will return [$header, $rows, $alignment]
+    $attributes = [];
     $plugins = $this->pluginManagerBuildSpec->getDefinitions();
     foreach ($plugins as $doc_item) {
       $instance = $this->pluginManagerBuildSpec->createInstance($doc_item['id']);
       $content = $instance->prepareContent();
-      $markdowns[$doc_item['label']] = $content;
+      $attributes[$doc_item['label']] = $content;
     }
-    return $markdowns;
+    return $attributes;
   }
 
 }

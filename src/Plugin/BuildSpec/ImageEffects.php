@@ -77,12 +77,11 @@ class ImageEffects extends BuildSpecBase implements ContainerFactoryPluginInterf
   /**
    * {inheritdoc}
    */
-  public function prepareContent():string {
+  public function prepareContent():array {
     $plugin_definitions = $this->getPluginDefinition();
 
-    $table_builder = $this->tableBuilder;
-    $table_builder->headers($plugin_definitions['keys']);
-    $table_builder->align(['L']);
+    $header = $plugin_definitions['keys'];
+    $alignment = ['L'];
 
     // Prepare list of all the image styles.
     $rows = [];
@@ -100,9 +99,11 @@ class ImageEffects extends BuildSpecBase implements ContainerFactoryPluginInterf
         $rows[] = $row;
       }
     }
-
-    $table_builder->rows($rows);
-    return $table_builder->render();
+    return [
+      'header' => $header,
+      'rows' => $rows,
+      'alignment' => $alignment
+    ];
   }
 
 }

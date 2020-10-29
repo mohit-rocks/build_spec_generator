@@ -17,9 +17,9 @@ abstract class BuildSpecBase extends PluginBase implements BuildSpecInterface {
   }
 
   /**
-   * All the plugins should implement this function and return markup string.
+   * All the plugins should implement this function and return array of header, footer and alignments.
    *
-   * @return string
+   * @return array
    */
   abstract public function prepareContent();
 

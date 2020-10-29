@@ -105,12 +105,12 @@ class NodeTypes extends BuildSpecBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  public function prepareContent():string {
+  public function prepareContent():array {
     $rows = [];
     $plugin_definitions = $this->getPluginDefinition();
 
-    $this->tableBuilder->headers($plugin_definitions['keys']);
-    $this->tableBuilder->align(['L']);
+    $header = $plugin_definitions['keys'];
+    $alignment = ['L'];
 
     // Prepare list of all the rows.
     $node_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
@@ -131,8 +131,11 @@ class NodeTypes extends BuildSpecBase implements ContainerFactoryPluginInterface
       // Move entire row to separate array.
       $rows[] = $row;
     }
-    $this->tableBuilder->rows($rows);
-    return $this->tableBuilder->render();
+    return [
+      'header' => $header,
+      'rows' => $rows,
+      'alignment' => $alignment
+    ];
   }
 
 }
