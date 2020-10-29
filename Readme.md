@@ -6,7 +6,7 @@ This module generates build spec related configurations to md file. This is expe
 ## Setup
 Add following configurations in settings.php
 
-####Settings for local file export:
+#### Settings for local file export:
 **Destination directory:**
 
 Destination directory is where markup files will be stored. These marekup files are in md format.
@@ -14,7 +14,7 @@ Destination directory is where markup files will be stored. These marekup files 
 $settings['build_spec_directory'] = '../docs/spec';
 ```
 
-####Settings for Google Sheet Export:
+#### Settings for Google Sheet Export:
 
 **Google API Credentials directory:**
 
@@ -31,7 +31,7 @@ In-case we are storing specification in Google sheet we need to provide google s
 $settings['google_spreadsheet_id'] = 'TEST';
 ```
 Spreadsheet id can be found from the Google Sheet URL
-https://docs.google.com/spreadsheets/d/<Spreadsheet-ID>/
+https://docs.google.com/spreadsheets/d/spreadsheet-ID/
 
 
 ## Extend
